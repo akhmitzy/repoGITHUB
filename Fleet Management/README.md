@@ -22,9 +22,9 @@ The values $s_1, s_2, \dots, s_I$ are obtained by simulating the flow of cars:
    If a request arrives but there is no car — the request is lost, and all subsequent requests for that day are also lost.
 2. If there is a car for the request, the branch earns $p \cdot c$, where:
 
-   $$
+   $
    c = 1 + \mathrm{Poisson}(\lambda_{\text{rent}})
-   $$
+   $
 
    is the number of days the car is rented, and $p = \$10$.
 3. Each car chooses a branch to return to according to a probability matrix $\mathrm{RETURN}(i, j)$ of size $I \times I$, where:
