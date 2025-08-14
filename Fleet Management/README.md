@@ -1,4 +1,4 @@
-# Exact formulation as an MIP (Mixed-Integer Linear Program) via precomputing profit for each possible $x$
+# Exact formulation as an MIP (Mixed-Integer Linear Program) via precomputing profit for each possible stash
 
 Let at the beginning of the night Jack has $s_1, s_2, \dots, s_I$ cars in $M$ branches $(f_1, f_2, \dots, f_I)$:
 
