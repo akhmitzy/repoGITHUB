@@ -26,7 +26,7 @@ from the policy that never moves any cars.
 We extend their model with configuration space of locations - we work with the rental duration and the car returning directly.
 We model the overnight vehicle relocation problem as a Mixed-Integer Linear Program (MILP). The goal is to decide how many cars to place at each branch overnight to maximize the next day’s expected profit.
 
-
+The notebook is *Var_JackCarRental_OR-Tools CP-SAT_optimization_for_shortage.ipynb* 
 
 
 ---
