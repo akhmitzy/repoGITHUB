@@ -202,12 +202,10 @@ with exact calculation of $E[\min(D_i, k)]$ for $D_i = 1 + \text{Poisson}(\lambd
   The MIP operates only on the cars physically available now.
 
 - To always guarantee a feasible solution, each balance equation now includes nonnegative
-  **slack variables** — shortage $\text{shortage}_i \ge 0$ and surplus $\text{surplus}_i \ge 0$:  
+  **slack variables** — shortage: $\text{shortage}_i \ge 0$ and surplus: $\text{surplus}_i \ge 0$:  
 
-  $$
-  \sum_k k \, y_{i,k} + \text{shortage}_i - \text{surplus}_i
-    = s_{\text{available}}[i] + \text{incoming} - \text{outgoing}
-  $$
+  $\sum_k y_{i,k}$ + $\text{shortage}_i$ -  $\text{surplus}_i$  =
+  $s(\text{available})_i$ + $\text{incoming}$ - $\text{outgoing}$
 
   Slacks give the model an “escape route” when constraints conflict.
 
