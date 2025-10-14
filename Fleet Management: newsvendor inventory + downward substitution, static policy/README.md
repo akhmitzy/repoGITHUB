@@ -13,51 +13,39 @@ Formulas are given in general form (for random $D_1, D_2$, any distributions), f
 Types:
 
 $$
-\[
-1 = \text{“better”}, \quad 2 = \text{“worse”}.
-\]
+1 = \text{“better”}, \quad 2 = \text{“worse”}
 $$
 
 Decision variables (integer, nonnegative):
 
 $$
-\[
-Q_1, Q_2 = \text{ordered/held quantities of each type.}
-\]
+Q_1, Q_2 = \text{ordered/held quantities of each type}
 $$
 
 Random demands:
 
 $$
-\[
 D_1, D_2
-\]
 $$
 
-(possibly independent or dependent).
+(possibly independent or dependent)
 
 Selling prices:
 
 $$
-\[
-P_1, P_2.
-\]
+P_1, P_2
 $$
 
 Wholesale (procurement) costs:
 
 $$
-\[
-C_1, C_2.
-\]
+C_1, C_2
 $$
 
 Salvage values:
 
 $$
-\[
-S_1, S_2,
-\]
+S_1, S_2
 $$
 
 — revenue from unsold units upon liquidation or disposal.
@@ -65,17 +53,13 @@ $$
 Holding costs (per unit):
 
 $$
-\[
-H_1, H_2.
-\]
+H_1, H_2
 $$
 
 Define net leftover value:
 
 $$
-\[
 V_i = S_i - H_i
-\]
 $$
 
 (the net residual value of one unsold unit of type $i$).
@@ -87,17 +71,13 @@ $$
 If
 
 $$
-\[
 D_2 > Q_2
-\]
 $$
 
 and there is a surplus of type 1
 
 $$
-\[
 Q_1 - D_1 > 0,
-\]
 $$
 
 (i.e., after meeting its own demand $D_1$, some type-1 units remain),  
