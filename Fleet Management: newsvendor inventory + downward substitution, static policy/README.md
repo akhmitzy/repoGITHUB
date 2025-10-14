@@ -215,13 +215,104 @@ For large supports or continuous $D$, use approximations based on:
 - Capacity constraints or shared storage.  
 - Time-dependent replenishment and dynamic programming extensions.
 
+--------------------------------------
+# 6. Optimization Approaches (Alternatives)
+
+## A) Exact Numerical Computation + Enumeration
+
+If the ranges of $Q_1$ and $Q_2$ are not very large (say, up to a few hundred), you can:
+
+1. For each $(Q_1, Q_2)$, compute $\Pi(Q_1, Q_2)$ via a two-dimensional sum or an integral.
+2. Take the maximum.
+
+This gives a **guaranteed optimal** solution.
+
+**Hint:**  
+Store the table of probabilities $Pr(D_1 = d_1, D_2 = d_2)$.  
+If $D_1$ and $D_2$ are independent, store them separately and multiply the probabilities when needed.
+
 ---
 
-### References
+## B) Simulation (Monte Carlo) + Stochastic Optimization
 
-- Nahmias, S. (1982). *Perishable inventory theory: A review*. Operations Research.  
-- Parlar, M., & Goyal, S. (1984). *Optimal ordering decisions for two substitutable products*.  
-- Mahajan, S., & van Ryzin, G. (2001). *Stocking retail assortments under dynamic substitution*. Operations Research.
+If analytical summation is difficult (e.g. complex/high-dimensional distributions or dependency between $D_1$ and $D_2$), use simulation:
+
+- For fixed $Q_1, Q_2$, simulate $N$ scenarios $(d_1, d_2)$ and estimate $\hat{\Pi}$;
+- Then use a simple grid search over $Q$ or a gradient-free optimizer (e.g. **Nelder–Mead**, **CMA-ES**) over $(Q_1, Q_2)$ to maximize $\hat{\Pi}$.
+
+This method is flexible, stable, and easy to implement.
+
+---
+
+## C) Iterative Fixation (Coordinate Descent)
+
+A practical approach:
+
+1. Fix $Q_2$, and optimize $Q_1$ (a one-dimensional newsvendor-like problem with substitution considered);
+2. Then fix $Q_1$ and optimize $Q_2$;
+3. Repeat until convergence.
+
+This often converges quickly to a (locally) optimal solution.
+
+---
+
+## D) Approximation via a Generalized Critical Fractile
+
+For a single product, the classical newsvendor condition is:
+
+$$
+F(Q^*) = \frac{p - c}{p - s},
+$$
+
+where:
+- $p$ — retail price,  
+- $c$ — purchase cost,  
+- $s$ — salvage value.
+
+With substitution, we can try to obtain an analogous condition by replacing the “effective” revenue from the last unit of type 1 with the **marginal revenue of type 1**:
+
+$$
+\text{marginal revenue of type 1} =
+P_1 \, Pr(\text{unit sold to } D_1)
++ P_2 \, Pr(\text{unit sold as substitute to } D_2)
++ V_1 \, Pr(\text{unsold}).
+$$
+
+Then, an inequality “less/greater” gives the **stopping condition**.  
+However, calculating these probabilities analytically is difficult, so this formulation is mainly used as an intuition for **numerical/simulation-based methods** and for interpreting results.
+
+---
+
+# 7. How to Compute Marginal Benefit (Optimization Intuition)
+
+Let’s consider adding one unit to $Q_1$ (keeping $Q_2$ fixed).
+
+That additional unit will bring:
+
+- $P_1$, if it satisfies demand $D_1$ (i.e., if $D_1 \ge q_{1,\text{old}} + 1$, meaning that without it some demand would be unmet);
+- $P_2$, if after satisfying $D_1$ it is used as a **substitute** when $Q_2$ is insufficient;
+- $V_1$, if it remains **unsold**.
+
+Therefore, the **expected marginal profit** is:
+
+$$
+\Delta_1(q_1) =
+P_1 \, Pr(\text{sold to } D_1)
++ P_2 \, Pr(\text{used as substitute})
++ V_1 \, Pr(\text{unsold})
+- C_1.
+$$
+
+The optimum for $Q_1$ is reached when $\Delta_1(q_1)$ **ceases to be positive**  
+(in discrete terms — keep adding units while the next one still contributes positively).
+
+The same logic applies to $Q_2$.
+
+This formula is easy to estimate via **simulation**:
+empirically calculate event probabilities and compute the marginal profit for each potential inventory level.
+
+---
+
 
 ---
 
