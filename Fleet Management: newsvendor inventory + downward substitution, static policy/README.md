@@ -152,7 +152,7 @@ $$
 For the substitution term,
 
 $$
-\mathbb{E}\!\left[\min\!\left((Q_1 - D_1)^+, (D_2 - Q_2)^+\right)\right],
+\mathbb{E}\left[\min\left((Q_1 - D_1)^+, (D_2 - Q_2)^+\right)\right],
 $$
 
 one may compute via a double sum over $d_1, d_2$ (if supports are small) or via **convolutions** if $D_1, D_2$ are independent.
@@ -306,7 +306,7 @@ The same logic applies to $Q_2$.
 This formula is easy to estimate via **simulation**:
 empirically calculate event probabilities and compute the marginal profit for each potential inventory level.
 ---
-## 8. is absent
+## 8. TBD: May be done in the future, later
 ---
 # 9. Examples of Special Cases and Practical Tips
 
@@ -460,13 +460,9 @@ If purchases/disposals occur, include costs $C_i$ and salvage $S_i$.
 ### Daily Profit
 
 $$
-\pi_t =
-P_1 \min(I_{1,t}, D_{1,t})
-+ P_2 \min(I_{2,t}, D_{2,t})
-+ P_2 \min\big((I_{1,t} - b)^+, (D_{2,t} - I_{2,t})^+\big)
-- H_1 I_{1,t} - H_2 I_{2,t}
-- C_1 \cdot 1_{\text{new cars type 1}} - C_2 \cdot 1_{\text{new cars type 2}}
-+ V_1 \cdot 1_{\text{disposed type 1}} + V_2 \cdot 1_{\text{disposed type 2}}
+\pi_t = P_1 \min(I_{1,t}, D_{1,t}) + P_2 \min(I_{2,t}, D_{2,t})+
+ P_2 \min\big((I_{1,t} - b)^+, (D_{2,t} - I_{2,t})^+\big) -
+ H_1 I_{1,t} - H_2 I_{2,t} - C_1 \cdot 1_{\text{new cars type 1}} - C_2 \cdot 1_{\text{new cars type 2}} + V_1 \cdot 1_{\text{disposed type 1}} + V_2 \cdot 1_{\text{disposed type 2}}
 $$
 
 (The formula can be detailed further depending on your accounting convention.)
@@ -532,11 +528,8 @@ Optimize $b$ by simulation: evaluate profit at different $b$ values.
 To determine optimal $Q_1$, $Q_2$, or $b$, use **marginal profit** logic:
 
 $$
-\Delta_1 =
-P_1 \Pr(\text{rented as type 1})
-+ P_2 \Pr(\text{used as substitute})
-+ V_1 \Pr(\text{unsold})
-- C_1
+\Delta_1 = P_1 \Pr(\text{rented as type 1}) + P_2 \Pr(\text{used as substitute})+
+ V_1 \Pr(\text{unsold})- C_1
 $$
 
 Add type-1 cars while $\Delta_1 > 0$.  
@@ -599,9 +592,7 @@ These are **operational expenses** — all day-to-day costs of running and maint
 
 - $H_1$, $H_2$ (holding or operating costs) represent a key part of OPEX.  
 - The residual value terms  
-  $$
-  V_1 = S_1 - H_1, \quad V_2 = S_2 - H_2
-  $$
+  $V_1 = S_1 - H_1, \quad V_2 = S_2 - H_2$
   reflect the **net retained value** of a car after operating expenses.
 
 ---
@@ -673,10 +664,10 @@ The model can be implemented either as a **deterministic MILP** or as a **stocha
 
 ## 1. Indices and Sets
 
-- \( t = 1, \dots, T \) — periods (days, weeks, or months)  
-- \( i \in \{1, 2\} \) — vehicle types:  
-  - \( i=1 \): premium type (“better”),  
-  - \( i=2 \): standard type (“worse”).
+- $\( t = 1, \dots, T \)$ — periods (days, weeks, or months)  
+- $\( i \in \{1, 2\} \)$ — vehicle types:  
+  - $\( i=1 \)$: premium type (“better”),  
+  - $\( i=2 \)$: standard type (“worse”).
 
 ---
 
@@ -684,13 +675,13 @@ The model can be implemented either as a **deterministic MILP** or as a **stocha
 
 | Symbol | Meaning |
 |:--------|:---------|
-| \( P_{i,t} \) | Rental price of type \(i\) in period \(t\). |
-| \( C_{i,t} \) | Purchase price (CAPEX) per unit of type \(i\) in period \(t\). |
-| \( S_{i,t} \) | Salvage value / resale revenue of type \(i\) in period \(t\). |
-| \( H_{i,t} \) | Operational cost (OPEX) per unit of type \(i\) in period \(t\). |
-| \( r \) | Discount rate per period (for NPV). |
-| \( D_{i,t} \) | Demand for type \(i\) in period \(t\). In stochastic form, \( D_{i,t}^s \) for scenario \(s\) with probability \( \pi_s \). |
-| \( B_t \) | Investment (CAPEX) budget in period \(t\). |
+| $P_{i,t}$ | Rental price of type $i$ in period $t$. |
+| $C_{i,t}$ | Purchase price (CAPEX) per unit of type $\(i\)$ in period \$(t\)$. |
+| $S_{i,t}$ | Salvage value / resale revenue of type $i$ in period $t$. |
+| $H_{i,t}$ | Operational cost (OPEX) per unit of type $i$ in period $t$. |
+| $r$ | Discount rate per period (for NPV). |
+| $D_{i,t}$ | Demand for type $i$ in period $t$. In stochastic form, $D_{i,t}^s$ for scenario $s$ with probability $\pi_s$. |
+| $B_t$ | Investment (CAPEX) budget in period $t$. |
 
 ---
 
@@ -698,125 +689,115 @@ The model can be implemented either as a **deterministic MILP** or as a **stocha
 
 | Symbol | Meaning |
 |:--------|:---------|
-| \( Q_{i,t} \) | Fleet size (owned units) of type \(i\) at the start of period \(t\). |
-| \( x_{i,t}^{buy} \ge 0 \) | Number of vehicles of type \(i\) purchased in period \(t\). |
-| \( x_{i,t}^{sell} \ge 0 \) | Number of vehicles of type \(i\) sold/retired in period \(t\). |
-| \( a_{i,t} \) | Available units of type \(i\) for rental in period \(t\). |
-| \( y_{i,t} \) | Vehicles of type \(i\) rented to their own segment in period \(t\). |
-| \( z_t \) | Number of downward substitutions (type 1 rented as type 2) in period \(t\). |
-| \( u_{i,t} \) | Idle/unused units of type \(i\) at the end of period \(t\). |
+| $Q_{i,t}$ | Fleet size (owned units) of type $i$ at the start of period $t$. |
+| $x_{i,t}^{buy} \ge 0$ | Number of vehicles of type $i$ purchased in period $t$. |
+| $x_{i,t}^{sell} \ge 0$ | Number of vehicles of type $i$ sold/retired in period $t$. |
+| $a_{i,t}$ | Available units of type $i$ for rental in period $t$. |
+| $y_{i,t}$ | Vehicles of type $i$ rented to their own segment in period $t$. |
+| $z_t$ | Number of downward substitutions (type 1 rented as type 2) in period $t$. |
+| $u_{i,t}$ | Idle/unused units of type $i$ at the end of period $t$. |
 
-All variables are nonnegative. Integer constraints may be imposed on \(x_{i,t}^{buy}\), \(x_{i,t}^{sell}\), and \(Q_{i,t}\) if desired.
+All variables are nonnegative. Integer constraints may be imposed on $x_{i,t}^{buy}$, $x_{i,t}^{sell}$, and $Q_{i,t}$ if desired.
 
 ---
 
 ## 4. Service and Substitution Logic
 
 1. **Primary demand service:**
-   \[
-   y_{1,t} \le \min(a_{1,t}, D_{1,t}), \quad
-   y_{2,t} \le \min(a_{2,t}, D_{2,t})
-   \]
+$y_{1,t} \le \min(a_{1,t}, D_{1,t})$,
+$y_{2,t} \le \min(a_{2,t}, D_{2,t})$
 
-2. **Downward substitution (type 1 → type 2):**
-   \[
-   z_t \le a_{1,t} - y_{1,t}, \quad
-   z_t \le D_{2,t} - y_{2,t}, \quad
-   z_t \ge 0
-   \]
-   Each substitution yields revenue \( P_{2,t} \) (the price of the lower segment).
+3. **Downward substitution (type 1 → type 2):**
+$z_t \le a_{1,t} - y_{1,t}$,
+$z_t \le D_{2,t} - y_{2,t}, z_t \ge 0$
 
-3. **Availability:**
-   \[
-   y_{1,t} + z_t \le a_{1,t}, \quad
-   y_{2,t} \le a_{2,t}
-   \]
+Each substitution yields revenue $P_{2,t}$ (the price of the lower segment).
+
+5. **Availability:**
+  $y_{1,t} + z_t \le a_{1,t}$,
+$y_{2,t} \le a_{2,t}$
 
 ---
 
 ## 5. Fleet Balance (CAPEX/Defleet)
 
-\[
-Q_{i,t+1} = Q_{i,t} + x_{i,t}^{buy} - x_{i,t}^{sell}
-\]
+$Q_{i,t+1} = Q_{i,t} + x_{i,t}^{buy} - x_{i,t}^{sell}$
 
 ---
 
 ## 6. Budget Constraint
 
-\[
-\sum_{i=1}^2 C_{i,t} \, x_{i,t}^{buy} \le B_t, \quad \forall t
-\]
+$\sum_{i=1}^2 C_{i,t}x_{i,t}^{buy} \le B_t, \quad \forall t$
 
 ---
 
 ## 7. Profit Components
 
 ### Revenue
-\[
-\text{Revenue}_t = P_{1,t} \, y_{1,t} + P_{2,t} \, y_{2,t} + P_{2,t} \, z_t
-\]
+$$
+\text{Revenue}_t = P_{1,t}y_{1,t} + P_{2,t}y_{2,t} + P_{2,t}z_t
+$$
 
 ### OPEX
-\[
-\text{Opex}_t = \sum_{i=1}^2 H_{i,t} \, Q_{i,t}
-\]
+$$
+\text{Opex}_t = \sum_{i=1}^2 H_{i,t} Q_{i,t}
+$$
 
 ### CAPEX
-\[
-\text{Capex}_t = \sum_{i=1}^2 C_{i,t} \, x_{i,t}^{buy}
-\]
+$$
+\text{Capex}_t = \sum_{i=1}^2 C_{i,t} x_{i,t}^{buy}
+$$
 
 ### Salvage
-\[
-\text{Salvage}_t = \sum_{i=1}^2 S_{i,t} \, x_{i,t}^{sell}
-\]
+$$
+\text{Salvage}_t = \sum_{i=1}^2 S_{i,t} x_{i,t}^{sell}
+$$
 
 ---
 
 ## 8. Objective: Maximize NPV
 
-\[
-\max \sum_{t=1}^T \frac{1}{(1+r)^{t-1}} 
-\Big( \text{Revenue}_t - \text{Opex}_t - \text{Capex}_t + \text{Salvage}_t \Big)
-\]
+$$
+\max \sum_{t=1}^T \frac{1}{(1+r)^{t-1}}\Big( \text{Revenue}_t - \text{Opex}_t - \text{Capex}_t + \text{Salvage}_t \Big)
+$$
+
 
 Optionally, include terminal salvage:
 
-\[
-+ \sum_{i} \frac{S_{i,T}^{term} \, Q_{i,T+1}}{(1+r)^T}
-\]
+$$
+ \sum_{i} \frac{S_{i,T}^{term}Q_{i,T+1}}{(1+r)^T}
+$$
 
 ---
 
 ## 9. Stochastic Extension
 
-Let scenarios \( s \in S \) have probabilities \( \pi_s \) and scenario-specific demand \( D_{i,t}^s \).  
-Then \( y_{i,t}^s, z_t^s \) become scenario-dependent, while \( x_{i,t}^{buy} \) and \( Q_{i,t} \) may remain first-stage decisions.
+Let scenarios $s \in S$have probabilities $\pi_s$ and scenario-specific demand $D_{i,t}^s$.  
+Then $y_{i,t}^s z_t^s$ become scenario-dependent, while $x_{i,t}^{buy}$ and $Q_{i,t}$ may remain first-stage decisions.
 
 Objective:
 
-\[
-\max \sum_{t=1}^T \frac{1}{(1+r)^{t-1}} 
+$$
+\max \sum_{t=1}^T \frac{1}{(1+r)^{t-1}}
 \sum_{s \in S} \pi_s \Big( \text{Revenue}_t^s - \text{Opex}_t - \text{Capex}_t + \text{Salvage}_t^s \Big)
-\]
+$$
 
 ---
 
 ## 10. Optional: Service-Level Constraints
 
-To ensure a minimum service rate \( \alpha_i \):
+To ensure a minimum service rate $\alpha_i$:
 
-\[
+$$
 \mathbb{E}_s \left[ \frac{y_{i,t}^s + \mathbf{1}_{\{i=1\}} z_t^s}{D_{i,t}^s} \right] \ge \alpha_i
-\]
+$$
 
 Implemented as:
 
-\[
+$$
 \sum_s \pi_s (y_{i,t}^s + \mathbf{1}_{\{i=1\}} z_t^s)
 \ge \alpha_i \sum_s \pi_s D_{i,t}^s
-\]
+$$
 
 ---
 
@@ -824,16 +805,16 @@ Implemented as:
 
 ### Amortization
 Instead of expensing CAPEX immediately, amortize it:
-\[
+$$
 A_{i,t} = \frac{C_i}{L}
-\]
-where \(L\) is the expected vehicle lifetime (years or periods).
+$$
+where $L$ is the expected vehicle lifetime (years or periods).
 
 ### Salvage
 When a vehicle is sold:
-\[
+$$
 \text{Cash inflow} = S_{i,t}
-\]
+$$
 In the NPV objective, this acts as a positive discounted flow.
 
 Depending on the accounting view:
@@ -856,11 +837,11 @@ Depending on the accounting view:
 ## 13. Implementation Roadmap
 
 1. **Data inputs:** historical demand, prices, costs, resale values.  
-2. **Parameter estimation:** forecast \( D_{i,t} \), salvage schedules, discount rate \(r\).  
+2. **Parameter estimation:** forecast $D_{i,t}$, salvage schedules, discount rate $r$.  
 3. **Solver setup:** formulate in Pyomo, Gurobi, or PuLP.  
-4. **Scenario generation:** sample \( D_{i,t}^s \) from empirical distributions.  
+4. **Scenario generation:** sample $D_{i,t}^s$ from empirical distributions.  
 5. **Run deterministic baseline → stochastic extension.**  
-6. **Sensitivity analysis:** CAPEX budget \( B_t \), substitution effect \( z_t \), discount rate \(r\).  
+6. **Sensitivity analysis:** CAPEX budget $B_t$, substitution effect $z_t$, discount rate $r$.  
 7. **Dashboard:** visualize fleet composition, profit streams, substitution utilization.
 
 ---
@@ -883,18 +864,13 @@ and thus aligns short-term operational optimization with long-term ROI and corpo
 
 ## 1. MILP (Deterministic Scenario)
 
-Build a **Mixed Integer Linear Program (MILP)** with integer variables \( x, Q, y, z \) and a linear objective (Net Present Value with discounting):
+Build a **Mixed Integer Linear Program (MILP)** with integer variables $x, Q, y, z$ and a linear objective (Net Present Value with discounting):
 
-\[
-\max_{x, y, z, Q}
-\sum_{t=1}^{T} \frac{1}{(1+r)^{t-1}}
-\left(
-P_{1,t} y_{1,t} + P_{2,t} y_{2,t} + P_{2,t} z_t
-- \sum_i H_{i,t} Q_{i,t}
-- \sum_i C_{i,t} x_{i,t}^{buy}
-+ \sum_i S_{i,t} x_{i,t}^{sell}
-\right)
-\]
+$$
+\max_{x, y, z, Q}\sum_{t=1}^{T} \frac{1}{(1+r)^{t-1}}\left(
+P_{1,t} y_{1,t} + P_{2,t} y_{2,t} + P_{2,t} z_t- \sum_i H_{i,t} Q_{i,t}-
+\sum_i C_{i,t} x_{i,t}^{buy}+ \sum_i S_{i,t} x_{i,t}^{sell}\right)
+$$
 
 subject to balance, budget, and service constraints described earlier.
 
@@ -902,7 +878,7 @@ subject to balance, budget, and service constraints described earlier.
 - Commercial: *Gurobi*, *CPLEX*  
 - Open-source: *CBC*
 
-Works well for small planning horizons \( T \) and moderate fleet sizes \( Q \).
+Works well for small planning horizons $T$ and moderate fleet sizes $Q$.
 
 ---
 
@@ -910,18 +886,18 @@ Works well for small planning horizons \( T \) and moderate fleet sizes \( Q \).
 
 Use **Sample Average Approximation (SAA)**:
 
-- Generate \( N \) demand scenarios \( D_{i,t}^{(s)} \) via Monte Carlo simulation.  
+- Generate $N$ demand scenarios $D_{i,t}^{(s)}$ via Monte Carlo simulation.  
 - Solve the problem:
 
-\[
+$$
 \max \frac{1}{N} \sum_{s=1}^{N} \text{NPV}^{(s)}
-\]
+$$
 
-where first-stage (purchase) variables \( x_{i,t}^{buy} \) are the same across all scenarios,  
-and operational decisions \( y, z \) can depend on each scenario.
+where first-stage (purchase) variables $x_{i,t}^{buy}$ are the same across all scenarios,  
+and operational decisions $( y, z )$ can depend on each scenario.
 
 **Solution methods:**
-- Use *Benders decomposition* for large \( N \).  
+- Use *Benders decomposition* for large $N$.  
 - Check SAA convergence by gradually increasing the number of scenarios.
 
 ---
@@ -930,7 +906,7 @@ and operational decisions \( y, z \) can depend on each scenario.
 
 In practice, a **rolling-horizon** (model predictive) approach is often used:
 
-- Every \( k \) days, solve the optimization problem over a horizon \( H \) (e.g., 12 weeks).  
+- Every $k$ days, solve the optimization problem over a horizon $H$ (e.g., 12 weeks).  
 - Implement only the decisions for the first period.  
 - Then roll the horizon forward and re-optimize with updated data.
 
@@ -942,7 +918,7 @@ In practice, a **rolling-horizon** (model predictive) approach is often used:
 
 If the model is large or scenario-rich, define a **parametric policy** instead:
 
-Example: specify a *protection level* \( b_t \), *reorder points*, or periodic review,  
+Example: specify a *protection level* $b_t$, *reorder points*, or periodic review,  
 and search for the best parameters.
 
 **Search methods:**
@@ -969,12 +945,12 @@ These approaches offer flexible, adaptive policies but require more data and com
 
 ## Practical Implementation Roadmap
 
-1. **Collect data:** historical \( D_{i,t} \) (by day or week), rental durations, returns, repairs, CAPEX/budget data, and actual \( P, C, H, S \).  
+1. **Collect data:** historical $D_{i,t}$ (by day or week), rental durations, returns, repairs, CAPEX/budget data, and actual $P, C, H, S$.  
 2. **Select time scale:** days or weeks.  
-3. **Implement a basic simulator:** 1-day rentals, substitution, protection level \( b_t \); verify logic.  
-4. **Run “what-if” analysis:** grid search over \( Q_1, Q_2, b \) with 10k–100k Monte Carlo runs to estimate long-run average profit and NPV.  
+3. **Implement a basic simulator:** 1-day rentals, substitution, protection level $b_t$; verify logic.  
+4. **Run “what-if” analysis:** grid search over $Q_1, Q_2, b$ with 10k–100k Monte Carlo runs to estimate long-run average profit and NPV.  
 5. **Build MILP/SAA:** for optimal purchasing decisions under CAPEX and NPV constraints.  
-6. **Implement rolling horizon:** optimize purchases and defleeting weekly with horizon \( H \).  
+6. **Implement rolling horizon:** optimize purchases and defleeting weekly with horizon $H$.  
 7. **Track key KPIs:**  
    - Occupancy rate  
    - Utilization by vehicle type  
@@ -987,29 +963,22 @@ These approaches offer flexible, adaptive policies but require more data and com
 
 ## Practical Tips and Simplifications
 
-- For large \( T \) and \( Q \): **relax integer constraints** and round later.  
-- If demand is highly stochastic, optimize only the *protection policy* \( b_t \) — this greatly simplifies the problem.  
+- For large $T$ and $Q$: **relax integer constraints** and round later.  
+- If demand is highly stochastic, optimize only the *protection policy* $b_t$ — this greatly simplifies the problem.  
 - Include a **terminal salvage value** at the end of the horizon to prevent artificial vehicle buildup.  
-- Always include a **CAPEX budget constraint** \( B_t \), which often limits purchasing decisions.
+- Always include a **CAPEX budget constraint** $B_t$, which often limits purchasing decisions.
 
 ---
 
 ## Example of Objective Function (NPV)
 
-\[
-\max_{x, y, z, Q}
-\sum_{t=1}^{T} 
-\frac{1}{(1+r)^{t-1}}
-\left(
-\underbrace{P_{1,t} y_{1,t} + P_{2,t} y_{2,t} + P_{2,t} z_t}_{\text{revenue}}
--
-\underbrace{\sum_i H_{i,t} Q_{i,t}}_{\text{OPEX}}
--
-\underbrace{\sum_i C_{i,t} x_{i,t}^{buy}}_{\text{CAPEX}}
-+
-\underbrace{\sum_i S_{i,t} x_{i,t}^{sell}}_{\text{salvage}}
-\right)
-\]
+$$
+\max_{x, y, z, Q}\sum_{t=1}^{T} \frac{1}{(1+r)^{t-1}}\left(
+\underbrace{P_{1,t} y_{1,t} + P_{2,t} y_{2,t} + P_{2,t} z_t}_{\text{revenue}}-
+\underbrace{\sum_i H_{i,t} Q_{i,t}}_{\text{OPEX}}-
+\underbrace{\sum_i C_{i,t} x_{i,t}^{buy}}_{\text{CAPEX}}+
+\underbrace{\sum_i S_{i,t} x_{i,t}^{sell}}_{\text{salvage}}\right)
+$$
 
 subject to balance, service, and budget constraints.
 
@@ -1018,70 +987,70 @@ subject to balance, service, and budget constraints.
 
 ## 1. CAPEX (initial, current)
 
-\[
+$$
 C = C_1 Q_1 + C_2 Q_2
-\]
+$$
 
 Where:  
-- \( C \) — total capital expenditure (CAPEX)  
-- \( C_1, C_2 \) — cost per unit for types 1 and 2  
-- \( Q_1, Q_2 \) — quantity of units purchased for each type  
+- $C$— total capital expenditure (CAPEX)  
+- $C_1, C_2$ — cost per unit for types 1 and 2  
+- $Q_1, Q_2$ — quantity of units purchased for each type  
 
 
 ## 2. Monthly Operating Net Cash Flow
 
-\[
+$$
 CF_m = \text{Revenue}_{month} - \text{OPEX}_{month}
-\]
+$$
 
 Where:  
-- \( CF_m \) — monthly cash flow  
-- \(\text{Revenue}_{month}\) — monthly rental or operating income  
-- \(\text{OPEX}_{month}\) — monthly operating expenses  
+- $CF_m$ — monthly cash flow  
+- $\text{Revenue}_{month}$ — monthly rental or operating income  
+- $\text{OPEX}_{month}$— monthly operating expenses  
 
 
 ## 3. Present Value (PV) of Monthly Cash Flows (Annuity)
 
-\[
+$$
 PV_{CF} = CF_m \cdot \frac{1 - (1 + r_m)^{-36}}{r_m}
-\]
+$$
 
 Where:  
-- \( PV_{CF} \) — present value of all monthly cash flows over 36 months  
-- \( CF_m \) — monthly cash flow  
-- \( r_m \) — monthly discount rate  
+- $PV_{CF}$ — present value of all monthly cash flows over 36 months  
+- $CF_m$ — monthly cash flow  
+- $r_m$ — monthly discount rate  
 
 
 ## 4. PV of Salvage Value
 
-\[
+$$
 PV_{salv} = \frac{S_1 Q_1 + S_2 Q_2}{(1 + r_m)^{36}}
-\]
+$$
 
 Where:  
-- \( PV_{salv} \) — present value of the total salvage (residual) value after 36 months  
-- \( S_1, S_2 \) — salvage value per unit for each type  
-- \( Q_1, Q_2 \) — quantities  
-- \( r_m \) — monthly discount rate  
+- $PV_{salv}$ — present value of the total salvage (residual) value after 36 months  
+- $S_1, S_2$ — salvage value per unit for each type  
+- $Q_1, Q_2$ — quantities  
+- $r_m$ — monthly discount rate  
 
 
 ## 5. Net Present Value (NPV)
 
-\[
+$$
 NPV = PV_{CF} + PV_{salv} - CAPEX
-\]
+$$
 
 Where:  
-- \( NPV \) — net present value over 36 months  
-- \( PV_{CF} \) — PV of monthly cash flows  
-- \( PV_{salv} \) — PV of salvage
+- $NPV$— net present value over 36 months  
+- $PV_{CF}$— PV of monthly cash flows  
+- $PV_{salv}$ — PV of salvage
 - -------------------------
 -
 # What the CFO Expects to See and Why It Matters
 
-**CAPEX \( X \)** — shows how much upfront investment is required (for example, \$2.22M in option E).
+**CAPEX $X$** — shows how much upfront investment is required (for example, \$2.22M in option E).
 
-**Monthly Operating Cash Flow \( Y \)** — indicates how quickly these investments are “paid back” through operations (in option E we get \$121.5k/month).
+**Monthly Operating Cash Flow $Y$** — indicates how quickly these investments are “paid back” through operations (in option E we get \$121.5k/month).
 
 **ROI / NPV / IRR** — measure the profitability and attractiveness of the project in terms of the time value of money.  
 The CFO usually focuses on **NPV** and **IRR**, not just accounting profit.
@@ -1090,7 +1059,7 @@ The CFO usually focuses on **NPV** and **IRR**, not just accounting profit.
 
 ### In practice, the CFO will ask:
 
-- How do \( \text{NPV} \) and \( \text{IRR} \) change with a ±10% change in demand (stress test)?  
+- How do $\text{NPV}$ and $\text{IRR}$ change with a ±10% change in demand (stress test)?  
 - How has the **annual volatility of the cash flow** changed?  
 - Are there **CAPEX budget limits** by year (if yes — this must be taken into account)?  
 - What is the **risk** if the **salvage value** turns out to be lower than estimated?
@@ -1100,38 +1069,38 @@ The CFO usually focuses on **NPV** and **IRR**, not just accounting profit.
 ### Key Financial Metrics (for reference)
 
 #### Initial CAPEX:
-\[
+$$
 C = C_1 Q_1 + C_2 Q_2
-\]
+$$
 
 #### Monthly Operating Net Cash Flow:
-\[
+$$
 CF_m = \text{Revenue}_{month} - \text{OPEX}_{month}
-\]
+$$
 
 #### Present Value of Monthly Cash Flows (Annuity, 36 months):
-\[
+$$
 PV_{CF} = CF_m \cdot \frac{1 - (1 + r_m)^{-36}}{r_m}
-\]
+$$
 
 #### Present Value of Salvage:
-\[
+$$
 PV_{salv} = \frac{S_1 Q_1 + S_2 Q_2}{(1 + r_m)^{36}}
-\]
+$$
 
 #### Net Present Value (NPV):
-\[
+$$
 NPV = PV_{CF} + PV_{salv} - CAPEX
-\]
+$$
 
 #### Simple ROI over 3 years:
-\[
+$$
 ROI = \frac{(\text{Total Net Cash Flow over 36 months} + \text{Salvage}) - CAPEX}{CAPEX}
-\]
+$$
 
 #### Annualized Return:
-\[
+$$
 R_{annualized} = (1 + ROI)^{1/3} - 1
-\]
+$$
 
 
