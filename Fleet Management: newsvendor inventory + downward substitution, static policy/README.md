@@ -2,7 +2,7 @@
 
 A classical **newsvendor / inventory** problem with two product types and **downward substitution** (if the worse type runs out → we issue the better type at the price of the worse one).
 
-No miscelania burdens like insurance or transaction costs were considered, we use independent Poisson  customers claims and dependent - Poisson-Poisson case (when lambda of claims of better cars depend from lambda of another cars in some simple concave way. We considered only statis policy - the number $b$ of better cars used for substituting another cars is constant ($b$ lives in range [0, ..., 20]. We provide NVP and ROI for different $b$ when the number of cars of both sort lays in range [1,20]. 
+No miscelania burdens like insurance or transaction costs were considered, we use independent Poisson  customers claims and dependent - Poisson-Poisson case (when lambda of claims of better cars depend from lambda of another cars in some simple concave way). We considered only static policy - the number $b$ of better cars used for substituting another cars is constant ($b$ lives in range [0, ..., 20]. We provide NVP and ROI for different $b$ when the number of cars of both sort lays in range [1,20]. 
 
 The case of adaptive policy - when $b$ is dynamical we provide in other folder with corresponding character title.
 
