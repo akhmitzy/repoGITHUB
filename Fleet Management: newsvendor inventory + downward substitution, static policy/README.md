@@ -1,4 +1,4 @@
-# Two-Product Newsvendor Problem with Downward Substitution
+# Two-Product Newsvendor Problem with Downward Substitution (in preparation)
 
 A classical **newsvendor / inventory** problem with two product types and **downward substitution** (if the worse type runs out → we issue the better type at the price of the worse one).
 
